@@ -1,0 +1,19 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27019
+      authentication-database: admin
+      database: work-item-service
+      username: mongodb-admin
+      password: mongodb-password
+  rabbitmq:
+    addresses: localhost:5672
+
+rabbitmq:
+  exchanges:
+    internal: internal.exchange
+  queues:
+    work-item: work-item.queue
+  routing-keys:
+    internal-work-item: internal.work-item.routing-key
