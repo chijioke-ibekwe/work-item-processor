@@ -16,4 +16,6 @@ public interface WorkItemService {
     void deleteWorkItem(String itemId);
 
     List<WorkItemReportDTO> getWorkItemReports();
+
+    WorkItem saveWorkItem(WorkItem workItem);
 }

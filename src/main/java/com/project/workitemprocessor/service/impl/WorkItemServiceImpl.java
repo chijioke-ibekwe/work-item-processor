@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class WorkItemServiceImpl implements WorkItemService {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
+    @Transactional
     public IdDTO createWorkItem(CreateWorkItemDTO dto) {
 
         WorkItem workItem = WorkItem.builder()
@@ -37,7 +39,7 @@ public class WorkItemServiceImpl implements WorkItemService {
                 .status(ProcessedStatus.PROCESSING)
                 .build();
 
-        WorkItem savedWorkItem = workItemRepository.save(workItem);
+        WorkItem savedWorkItem = this.saveWorkItem(workItem);
 
         //emit work item event for processing
         this.applicationEventPublisher.publishEvent(new WorkItemCreatedEvent(savedWorkItem.getId()));
@@ -53,6 +55,7 @@ public class WorkItemServiceImpl implements WorkItemService {
     }
 
     @Override
+    @Transactional
     public void deleteWorkItem(String itemId) {
 
         WorkItem workItem = this.getWorkItem(itemId);
@@ -62,6 +65,13 @@ public class WorkItemServiceImpl implements WorkItemService {
         } else {
             throw new WorkItemServerException(String.format("Work Item with id %s is already processed", itemId));
         }
+    }
+
+    @Override
+    @Transactional
+    public WorkItem saveWorkItem(WorkItem workItem) {
+
+        return workItemRepository.save(workItem);
     }
 
     @Override

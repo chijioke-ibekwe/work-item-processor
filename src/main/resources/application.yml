@@ -9,11 +9,23 @@ spring:
       password: mongodb-password
   rabbitmq:
     addresses: localhost:5672
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 2s
+          max-attempts: 3
+          max-interval: 8s
+          multiplier: 2
 
 rabbitmq:
   exchanges:
     internal: internal.exchange
+    internal-dl: internal-dl.exchange
   queues:
     work-item: work-item.queue
+    work-item-dl: work-item-dl.queue
   routing-keys:
     internal-work-item: internal.work-item.routing-key
+    internal-dl-work-item-dl: internal-dl.work-item-dl.routing-key
+  max-concurrent-consumers: 2
