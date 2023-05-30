@@ -1,0 +1,54 @@
+body {
+    background-color: #F2F2F2;
+    max-width: 80%;
+    margin: auto;
+    font-family: sans-serif;
+}
+
+#report-table {
+    width: 100%;
+    margin-top: 10px;
+}
+
+th, td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+tr > :first-child {
+    background-color: black;
+    color: white;
+    font-weight: bolder;
+}
+
+th, td {
+    background-color: #7268A6;
+    color: white;
+}
+
+caption {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 20px
+}
+
+#refresh-button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    padding: 11px 25px;
+}
+
+#button-div {
+    display: flex;
+    justify-content: left;
+    margin: auto;
+}

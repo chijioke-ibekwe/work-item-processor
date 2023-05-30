@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Work Item Report</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <script th:src="@{/js/script.js}"></script>
+</head>
+<body>
+
+    <div id="button-div">
+        <button type="button" id="refresh-button" onClick="window.location.reload()">
+            Reload Report
+        </button>
+    </div>
+
+    <table id="report-table">
+        <caption>Work Item Report</caption>
+        <thead>
+            <tr>
+                <th>Work Item Value</th>
+                <th>Number of Work Items</th>
+                <th>Number of Processed Work Items</th>
+            </tr>
+        </thead>
+        <tbody id="report-table-body">
+        </tbody>
+    </table>
+
+</body>
+</html>

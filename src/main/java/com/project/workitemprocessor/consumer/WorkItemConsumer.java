@@ -1,14 +1,11 @@
 package com.project.workitemprocessor.consumer;
 
-import com.project.workitemprocessor.config.property.RabbitmqProperties;
 import com.project.workitemprocessor.dto.IdDTO;
 import com.project.workitemprocessor.entity.WorkItem;
 import com.project.workitemprocessor.enums.ProcessedStatus;
 import com.project.workitemprocessor.service.WorkItemService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
