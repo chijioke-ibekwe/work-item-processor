@@ -29,6 +29,8 @@ class WorkItemControllerTest {
     @MockBean
     private WorkItemService workItemService;
 
+    private final TestUtil testUtil = new TestUtil();
+
     private final ObjectMapper objectMapper = new ObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT).setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);;
 
@@ -66,8 +68,6 @@ class WorkItemControllerTest {
     @Test
     void testGetWorkItem() throws Exception {
 
-        TestUtil testUtil = new TestUtil();
-
         when(workItemService.getWorkItem(any())).thenReturn(testUtil.getWorkItem());
 
         this.mockMvc.perform(get("/api/v1/work-items/{itemId}", "aQweFGHDwdsefSvbbg"))
@@ -91,8 +91,6 @@ class WorkItemControllerTest {
 
     @Test
     void testGetWorkItemReports() throws Exception {
-
-        TestUtil testUtil = new TestUtil();
 
         when(workItemService.getWorkItemReports()).thenReturn(testUtil.getWorkItemReports());
 
