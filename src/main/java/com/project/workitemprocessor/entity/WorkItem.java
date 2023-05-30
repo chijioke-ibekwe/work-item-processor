@@ -24,16 +24,15 @@ import java.time.LocalDateTime;
 public class WorkItem {
 
     @Id
-    @JsonIgnore
     private String id;
 
-//    @JsonIgnore
+    @JsonIgnore
     @CreatedDate
     @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
     @Field(name = "created_on")
     protected LocalDateTime createdOn;
 
-//    @JsonIgnore
+    @JsonIgnore
     @LastModifiedDate
     @JsonSerialize(using = CustomLocalDateTimeSerializer.class)
     @Field(name = "updated_on")
