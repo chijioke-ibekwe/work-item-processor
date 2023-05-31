@@ -1,11 +1,11 @@
 ﻿# Work Item Processor
-RESTful APIs for an e-commerce platform built using Node.js, Express and TypeScript.
+Work Item Processor is a Spring Boot project that processes and reports work items. It consists of a set of RESTful APIs for performing basic CRUD operations on a work item, and utilizes a producer-consumer design pattern to process created work items asynchronously via a RabbitMQ message broker. This application also serves a report of the work items on a single web page, using the Thymeleaf templating engine. 
 
 ## Getting Started
 ### Prerequisites
 You need the following installed on your machine to run the application.  
 NB: The outlined versions are the tested ones. Other versions could also work.
-1. Node v18.12.1
+1. JDK 17
 2. Docker
 
 ### Key Dependencies
