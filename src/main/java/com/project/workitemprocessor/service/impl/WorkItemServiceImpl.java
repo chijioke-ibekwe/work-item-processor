@@ -20,12 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ResourceUtils;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -87,22 +83,5 @@ public class WorkItemServiceImpl implements WorkItemService {
     public List<WorkItemReportDTO> getWorkItemReports() {
 
         return workItemReportRepository.groupWorkItemsByValue();
-    }
-
-    @Override
-    public void exportWorkItemReportDocument(HttpServletResponse response) throws IOException, JRException {
-
-        String filePath = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX +
-                        "WorkItemJasperTemplate.jasper").getAbsolutePath();
-
-        List<WorkItemReportDTO> data = this.getWorkItemReports();
-
-        JasperReport jasperReport = JasperCompileManager.compileReport(filePath);
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(data);
-        Map<String, Object> parameters = new HashMap<>();
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);;
-
-        JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
     }
 }

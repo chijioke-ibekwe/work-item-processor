@@ -7,16 +7,11 @@ import com.project.workitemprocessor.dto.IdDTO;
 import com.project.workitemprocessor.dto.WorkItemReportDTO;
 import com.project.workitemprocessor.entity.WorkItem;
 import com.project.workitemprocessor.service.WorkItemService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.jasperreports.engine.JRException;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -70,17 +65,5 @@ public class WorkItemController {
                 .data(workItemService.getWorkItemReports())
                 .build();
 
-    }
-
-    @GetMapping("/report/download")
-    public void downloadWorkItemReport(HttpServletResponse response) throws IOException, JRException {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy:HH:mm:ss");
-        String dateTime = formatter.format(LocalDateTime.now());
-
-        response.setHeader("Content-Disposition", "attachment;filename=" + dateTime + "work-item-report.pdf");
-        response.setContentType("application/pdf");
-
-        workItemService.exportWorkItemReportDocument(response);
     }
 }

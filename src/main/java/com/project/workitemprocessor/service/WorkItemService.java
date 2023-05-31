@@ -24,6 +24,4 @@ public interface WorkItemService {
     List<WorkItemReportDTO> getWorkItemReports();
 
     WorkItem saveWorkItem(WorkItem workItem);
-
-    void exportWorkItemReportDocument(HttpServletResponse response) throws IOException, JRException;
 }
