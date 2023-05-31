@@ -133,13 +133,13 @@ The application contains the following endpoints:
 The see the work item report UI visit `http://localhost:8080/work-item-report`
 
 ### Status Codes
-* 200 
+* `200` 
   - This is returned when the request is successful
-* 400
+* `400`
   - This is returned when user makes an invalid request like attempting to create a work item with an invalid value (value that is not an     integer between 1 - 10)
-* 404
+* `404`
   - This is returned when a the work item in question does not exist on the database
-* 500
+* `500`
   - This is returned when you attempt to delete an item that has been processed
 
 ## Author
