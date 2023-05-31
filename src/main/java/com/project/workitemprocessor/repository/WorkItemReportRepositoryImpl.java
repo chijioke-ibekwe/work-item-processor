@@ -1,4 +1,4 @@
-package com.project.workitemprocessor.repository.impl;
+package com.project.workitemprocessor.repository;
 
 import com.project.workitemprocessor.dto.WorkItemReportDTO;
 import com.project.workitemprocessor.entity.WorkItem;
@@ -7,13 +7,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
-@Repository
+@Component
 @AllArgsConstructor
 public class WorkItemReportRepositoryImpl implements WorkItemReportRepository {
 
