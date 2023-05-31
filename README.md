@@ -1,5 +1,6 @@
 ﻿# Work Item Processor
-Work Item Processor is a Spring Boot project that processes and reports work items. A work item is an entity that has an id, value, status and result property. This application consists of a set of RESTful APIs for performing basic CRUD operations on a work item, and utilizes a producer-consumer design pattern to process created work items asynchronously via a RabbitMQ message broker. It also serves a report of the existing work items on a single web page, using the Thymeleaf templating engine.  
+Work Item Processor is a Spring Boot project that processes and reports work items. A work item is an entity that has an id, value, status and result property. This application consists of a set of RESTful APIs for performing basic CRUD operations on a work item, and utilizes a producer-consumer design pattern to process created work items asynchronously via a RabbitMQ message broker. It also serves a report of the existing work items on a single web page, using the Thymeleaf templating engine.
+   
 Work item processing involves the squaring its `value` to obtain the `result` property and updating the status value from `PROCESSING` to `COMPLETED`. The time it takes for a work item to be processed can be determined by multiplying the value of the work item by 1000ms.
 
 ## Getting Started
@@ -33,20 +34,21 @@ To run the application locally:
   This will setup the following in a container: 
     * A MongoDB database running on `port 27019`
     * A Mongo Express admin UI running on `port 8081` (`http://localhost:8081`)
-    * A RabbitMQ message broker running on `port 5672`, and an admin UI running on `port 15672` (`http://localhost:15672`). To log into         this UI, enter username and password as guest.
-    * Run the app using one of the following commands:
-      ```bash
-      java -jar -Dspring.profiles.active=test target/ping-me-0.0.1-SNAPSHOT.jar
+    * A RabbitMQ message broker running on `port 5672`, and an admin UI running on `port 15672` (`http://localhost:15672`). To log into         this UI, enter username and password as `guest`.  
+  
+* Run the app using one of the following commands:
+  ```bash
+  java -jar -Dspring.profiles.active=test target/ping-me-0.0.1-SNAPSHOT.jar
 
-       or
+   or
 
-      mvn spring-boot:run -Drun.arguments="spring.profiles.active=test"
+  mvn spring-boot:run -Drun.arguments="spring.profiles.active=test"
       ```
 * Upon startup, the following infrastructure will be created on RabbitMQ:
-  * Exchange: internal.exchange
-  * Dead-Letter Exchange: internal-dl.exchange
-  * Queue: work-item.queue
-  * Dead-Letter Queue: work-item-dl.queue
+  * Exchange: `internal.exchange`
+  * Dead-Letter Exchange: `internal-dl.exchange`
+  * Queue: `work-item.queue`
+  * Dead-Letter Queue: `work-item-dl.queue`
 * The app will be started on `http://localhost:8080`
 
 ## API Documentation
