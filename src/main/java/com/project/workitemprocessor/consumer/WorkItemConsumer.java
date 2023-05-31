@@ -30,7 +30,7 @@ public class WorkItemConsumer {
 
         //delay for some milliseconds
         try {
-            Thread.sleep(value * 3000);
+            Thread.sleep(value * 10);
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
         }
