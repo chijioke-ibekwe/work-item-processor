@@ -1,294 +1,143 @@
 ﻿# Work Item Processor
-Work Item Processor is a Spring Boot project that processes and reports work items. It consists of a set of RESTful APIs for performing basic CRUD operations on a work item, and utilizes a producer-consumer design pattern to process created work items asynchronously via a RabbitMQ message broker. This application also serves a report of the work items on a single web page, using the Thymeleaf templating engine. 
+Work Item Processor is a Spring Boot project that processes and reports work items. A work item is an entity with an inIt consists of a set of RESTful APIs for performing basic CRUD operations on a work item, and utilizes a producer-consumer design pattern to process created work items asynchronously via a RabbitMQ message broker. This application also serves a report of the work items on a single web page, using the Thymeleaf templating engine. 
 
 ## Getting Started
 ### Prerequisites
-You need the following installed on your machine to run the application.  
-NB: The outlined versions are the tested ones. Other versions could also work.
+For building and running the application you need the following (NB: version may vary):
 1. JDK 17
-2. Docker
+2. Maven 3
+3. Docker
 
 ### Key Dependencies
-1. Express
-2. BCrpyt
-3. Body Parser
-4. PG (Postgres)
-5. DB Migrate
-6. JSON Web Token
-7. Dot Env
+For backend
+1. Spring Web
+2. Spring Data Mongo
+3. Spring AMQP
+4. Thymeleaf
 
 ## How to Run
-To build and run the application locally:
-- Clone the repository using the following command:
-```bash
-git clone https://github.com/<your-git-username>/store-front-backend.git
-```
+To run the application locally:
+* Clone the repository using the following command:
+  ```bash
+  git clone https://github.com/<your-git-username>/work-item-processor.git
+  ```
+* Build the project and run the tests by running:
+  ```
+  mvn clean package
+  ```
+* Run the docker compose file using the command: 
+  ```bash
+  docker-compose up -d
+  ```
+  This will setup the following in a container: 
+    * A MongoDB database running on port 27019
+    * A Mongo Express admin UI running on port 8081 (`http://localhost:8081`)
+    * A RabbitMQ message broker running on port 5672, and an admin UI running on port 15672 (`http://localhost:15672`). To log into this       UI enter the UI, enter username and password as guest.
+* Run the app using one of the following commands:
+  ```bash
+  java -jar -Dspring.profiles.active=test target/ping-me-0.0.1-SNAPSHOT.jar
 
-- Install the dependencies using:
-```bash
-npm install
-```
+   or
 
-- Run the docker compose file to setup a postgres database in a container using. Database is set up to run on port 5430:
-```bash
-docker-compose up
-```
+  mvn spring-boot:run -Drun.arguments="spring.profiles.active=test"
+  ```
+* Upon startup, the following infrastructure will be created on RabbitMQ:
+  * Exchange: internal.exchange
+  * Dead-Letter Exchange: internal-dl.exchange
+  * Queue: work-item.queue
+  * Dead-Letter Queue: work-item-dl.queue
+* The app will be started on `http://localhost:8080`
 
-- Connect to the default postgres database within the container environment using the command:
-```bash
-docker exec -it node-postgres psql -U postgres
-```
-
-- Within the postgres database, create the store-front and store-front-test databases for the application using;
-```bash
-CREATE DATABASE store-front;
-CREATE DATABASE store-front-test;
-```
-
-- Run the `\q` to quit the postgres terminal and `CTRL D` to exit the container environment;
-
-- Run the tests using the commands;  
-  (if on a windows)
-```bash
-npm run test
-```
-(if on a linux)
-```bash
-npm run test2
-```
-
-- Run the migration files using;
-```bash
-db-migrate up
-```
-
-- Transpile the typescript code and start up the server using the command. Application is set up to run on port 3000;
-```bash
-npm run watch
-```
 ## API Documentation
 
 The application contains the following endpoints:
 
-1. `POST '/api/v1/users'`
+1. `POST '/api/v1/work-items'`
 
-- Registers a new user on the application.
-- Body: A JSON containing the details of the user as shown below:
+  - Creates a new work item, and emits an event which queues up the work item for processing.
+  - Body: A JSON containing the value property of the work item. This value must be between 1 and 10:
 
-```json
-{
-    "firstName": "John",
-    "lastName": "Doe",
-    "username": "john.doe@gmail.com",
-    "password": "password",
-    "phoneNumber": "+2348055556666",
-    "roleId": 2
-}
-```
-- Returns: A JSON of the registered user's details.
-
-```json
-{
-    "id": 1,
-    "firstName": "John",
-    "lastName": "Doe",
-    "username": "john.doe@gmail.com",
-    "password": "encrypted_password"
-}
-```
-
-2. `POST '/api/v1/users/authenticate'`
-
-- Authenticates a user on the application
-- Body: A JSON of the user's username and password
-
-```json
-{
-    "username": "john.doe@gmail.com",
-    "password": "password"
-}
-```
-- Returns: A JSON of the access token details.
-
-```json
-{
-    "access_token": "access_token",
-}
-```
-
-3. `GET '/api/v1/users'`
-
-- Fetches all the users on the app. This API is protected, and requires a valid bearer token in the authorization header of the request.
-
-```json
-[
+    ```json
     {
-        "id": 1,
-        "first_name": "John",
-        "last_name": "Doe",
-        "username": "john.doe@gmail.com",
-        "phone_number": "+2348055556666",
-        "verified": false,
-        "role": {
-            "id": 2,
-            "name": "role_customer",
-            "description": "Role for customer users"
+        "value": 5,
+    }
+    ```
+  - Returns: A JSON with the created work item's ID as shown below:
+
+    ```json
+    {
+        "status": "SUCCESSFUL",
+        "message": "Work Item created successfully",
+        "data": {
+          "id": "507f1f77bcf86cd799439011"
         }
     }
-]
-```
+    ```
 
-4. `GET '/api/v1/users/<userId>'`
+2. `GET '/api/v1/work-items/{itemId}'`
 
-- Fetches a single user on the app using the user's id. This API is protected, and requires a valid bearer token in the authorization header of the request.
+  - Fetches a single work item using the work item id as a path variable.
+  - Returns: A JSON of the work item's details as shown below:
 
-```json
-{
-    "id": 1,
-    "firstName": "John",
-    "lastName": "Doe",
-    "username": "john.doe@gmail.com",
-    "password": "encrypted_password"
-}
-```
-
-5. `POST '/api/v1/products'`
-
-- Creates a product on the app. This API is protected, and requires a valid bearer token in the authorization header of the request.
-- Body: A JSON of the product's details
-
-```json
-{
-    "name": "IPhone 13 Pro Max",
-    "price": 520000,
-    "category": "TECHNOLOGY"
-}
-```
-- Returns: A JSON of the created product.
-
-```json
-{
-    "id": 1,
-    "name": "IPhone 13 Pro Max",
-    "price": "520000.00",
-    "category": "TECHNOLOGY"
-}
-```
-
-
-6. `GET '/api/v1/products'`
-
-- Fetches all the products on the app.
-
-```json
-[
+    ```json
     {
-        "id": 1,
-        "name": "IPhone 13 Pro Max",
-        "price": "520000.00",
-        "category": "TECHNOLOGY"
-    }
-]
-```
-
-7. `GET '/api/v1/products/<productId>'`
-
-- Fetches a single product on the app by the id.
-
-```json
-{
-    "id": 1,
-    "name": "IPhone 13 Pro Max",
-    "price": "520000.00",
-    "category": "TECHNOLOGY"
-}
-```
-
-8. `GET '/api/v1/orders/active'`
-
-- Fetches a user's active order. This API is protected, and requires a valid bearer token in the authorization header of the request.
-
-```json
-{
-    "id": 1,
-    "status": "ACTIVE",
-    "user_id": 1,
-    "products": [
-        {
-            "id": 1,
-            "quantity": 3
+        "status": "SUCCESSFUL",
+        "message": null,
+        "data": {
+          "id": "507f1f77bcf86cd799439011",
+          "value": 5,
+          "status": "COMPLETED",
+          "result": 25
         }
-    ]
-}
-```
+    }
+    ```
+3. `DELETE '/api/v1/work-items/{itemId}'`
 
-9. `GET '/api/v1/orders/completed'`
+  - Deletes a work item using the work item id as a path variable.
+  - Returns: A JSON as shown below:
 
-- Fetches a user's completed orders. This API is protected, and requires a valid bearer token in the authorization header of the request.
-
-```json
-[
+    ```json
     {
-        "id": 1,
-        "status": "COMPLETED",
-        "user_id": 1,
-        "products": [
-            {
-                "id": 1,
-                "quantity": 2
-            }
+        "status": "SUCCESSFUL",
+        "message": "Work Item deleted successfully",
+        "data": null
+    }
+    ```
+
+4. `GET '/api/v1/work-items/report'`
+
+  - Fetches a report of all work items on the database, grouped by value and providing details of the number of work items and the number     processed.
+
+    ```json
+    {
+        "status": "SUCCESSFUL",
+        "message": null,
+        "data": [
+          {
+            "value": 5,
+            "numberOfWorkItems": 3,
+            "numberOfProcessedWorkItems": 2
+          },
+          {
+            "value": 7,
+            "numberOfWorkItems": 2,
+            "numberOfProcessedWorkItems": 2
+          }
         ]
     }
-]
-```
+    ```
+### Report Web Page
+The see the work item report UI visit `http://localhost:8080/work-item-report`
 
-10. `POST '/api/v1/orders/<orderId>/products'`
-
-- Adds a product to a user's active order. It takes the active order's id as a path variable. This API is protected, and requires a valid bearer token in the authorization header of the request.
-- Body: A JSON of the product id and quantity.
-
-```json
-{
-    "quantity": 3,
-    "productId": 1
-}
-```
-- Returns: A JSON of the active order.
-
-```json
-{
-    "id": 1,
-    "status": "ACTIVE",
-    "user_id": 1,
-    "products": [
-        {
-            "id": 1,
-            "quantity": 3
-        }
-    ]
-}
-```
-
-11. `GET '/api/v1/products/most-popular'`
-
-- Fetches the most popular products on the app.
-
-```json
-[
-    {
-        "id": 1,
-        "name": "IPhone 13 Pro Max",
-        "price": "520000.00",
-        "category": "TECHNOLOGY"
-    },
-        {
-        "id": 2,
-        "name": "Beatz by Dre Headphones",
-        "price": "82000.00",
-        "category": "TECHNOLOGY"
-    }
-]
-```
+### Status Codes
+* 200 
+  - This is returned when the request is successful
+* 400
+  - This is returned when user makes an invalid request like attempting to create a work item with an invalid value (value that is not an     integer between 1 - 10)
+* 404
+  - This is returned when a the work item in question does not exist on the database
+* 500
+  - This is returned when you attempt to delete an item that has been processed
 
 ## Author
 
