@@ -138,19 +138,34 @@ The see the work item report UI visit `http://localhost:8080/work-item-report`
 
 ### Status Codes
 * `200` 
-  - This is returned when the request is successful
+  This is returned when the request is successful
 * `400`
-  - This is returned when user makes an invalid request like attempting to create a work item with an invalid value 
-    (value that is not an integer between 1 - 10)
+  This is returned when user makes an invalid request like attempting to create a work item with an invalid value 
+  (value that is not an integer between 1 - 10)
 * `404`
-  - This is returned when the work item in question does not exist on the database
+  This is returned when the work item in question does not exist on the database
 * `500`
-  - This is returned when you attempt to delete an item that has already been processed
+  This is returned when you attempt to delete an item that has already been processed
 
 ## Load Testing
 In order to load test this application to ascertain the power of its asynchronous processing. We'll be using an open 
 source tool called JMeter. To download JMeter, download and extract the JMeter binaries zip file [here](https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.5.zip).
-To use this tool in the GUI mode,
+To use this tool in the GUI mode:
+* Open the JMeter batch file in the bin folder of the extracted file
+* When the GUI is booted up, create a new test plan.
+* Create a thread group in the test plan. In the thread properties select the number of threads as `1000`, ramp up period 
+in seconds as `1` and loop count as `1`. Then, save the thread group.
+* In the thread group created, add a sampler of type HttpRequest. In the HttpRequest creation page, select  
+`Server Name or IP` as `localhost:8080`. In the HttpRequest section, select request type as `POST` and the path as 
+`/api/v1/work-item`. Add following JSON body data to the request
+```json
+{
+  "value": 5
+}
+```
+Then, save the sampler.
+* In the thread group, also create a listener to view the result of the test in your desired format.
+Recommendation: Select `View Results in Table`
 
 ## Author
 

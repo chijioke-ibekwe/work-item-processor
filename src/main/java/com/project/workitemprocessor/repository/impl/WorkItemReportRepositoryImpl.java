@@ -1,4 +1,4 @@
-package com.project.workitemprocessor.repository;
+package com.project.workitemprocessor.repository.impl;
 
 import com.project.workitemprocessor.dto.WorkItemReportDTO;
 import com.project.workitemprocessor.entity.WorkItem;
@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
-@Component
+@Repository
 @AllArgsConstructor
 public class WorkItemReportRepositoryImpl implements WorkItemReportRepository {
 

@@ -29,3 +29,20 @@ rabbitmq:
     internal-work-item: internal.work-item.routing-key
     internal-dl-work-item-dl: internal-dl.work-item-dl.routing-key
   max-concurrent-consumers: 2
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+        SQL: DEBUG
+    com:
+      project:
+        workitemprocessor:
+          service:
+            impl: ERROR
+          controller: ERROR
