@@ -155,17 +155,20 @@ To use this tool in the GUI mode:
 * When the GUI is booted up, create a new test plan.
 * Create a thread group in the test plan. In the thread properties select the number of threads as `1000`, ramp up period 
 in seconds as `1` and loop count as `1`. Then, save the thread group.
-* In the thread group created, add a sampler of type HttpRequest. In the HttpRequest creation page, select  
-`Server Name or IP` as `localhost:8080`. In the HttpRequest section, select request type as `POST` and the path as 
-`/api/v1/work-item`. Add following JSON body data to the request
+* In the thread group created, add a sampler of type HttpRequest. In the HttpRequest creation page, enter 
+`Server Name or IP` as `localhost` and `Port Number` as `8080`. In the HttpRequest section, select request type as `POST` 
+* and the path as `/api/v1/work-items`. Add the following JSON body data to the request
 ```json
 {
   "value": 5
 }
 ```
 Then, save the sampler.
-* In the thread group, also create a listener to view the result of the test in your desired format.
+* In the thread group, add a config element of type `Http Header Manager` and set a `Content-Type` header with value 
+`application/json`
+* Finally, in the thread group, also create a listener to view the result of the test in your desired format.
 Recommendation: Select `View Results in Table`
+* Run the test and view the result.
 
 ## Author
 
