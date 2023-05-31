@@ -40,14 +40,8 @@ To run the application locally:
     * A Mongo Express admin UI running on `port 8081` (`http://localhost:8081`)
     * A RabbitMQ message broker running on `port 5672`, and an admin UI running on `port 15672` (`http://localhost:15672`). To log into         this UI, enter username and password as `guest`.  
   
-* Run the app using one of the following commands:
-  ```bash
-  java -jar -Dspring.profiles.active=test target/ping-me-0.0.1-SNAPSHOT.jar
+* Run the application
 
-   or
-
-  mvn spring-boot:run -Drun.arguments="spring.profiles.active=test"
-      ```
 * Upon startup, the following infrastructure will be created on RabbitMQ:
   * Exchange: `internal.exchange`
   * Dead-Letter Exchange: `internal-dl.exchange`
