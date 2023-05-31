@@ -1,7 +1,11 @@
 ﻿# Work Item Processor
-Work Item Processor is a Spring Boot project that processes and reports work items. A work item is an entity that has an id, value, status and result property. This application consists of a set of RESTful APIs for performing basic CRUD operations on a work item, and utilizes a producer-consumer design pattern to process created work items asynchronously via a RabbitMQ message broker. It also serves a report of the existing work items on a single web page, using the Thymeleaf templating engine.
+Work Item Processor is a Spring Boot project that processes and reports work items. A work item is an entity that has 
+an id, value, status and result property. This application consists of a set of RESTful APIs for performing basic CRUD operations on a work item, and utilizes a producer-consumer design pattern to process created work items asynchronously via a RabbitMQ message broker. It also serves a report of the existing work items on a single web page, using the Thymeleaf templating engine.
    
-Work item processing involves the squaring its `value` to obtain the `result` property and updating the status value from `PROCESSING` to `COMPLETED`. The time it takes for a work item to be processed can be determined by multiplying the value of the work item by 1000ms.
+Work item processing involves squaring its `value` to obtain the `result` property and updating the status value 
+from `PROCESSING` to `COMPLETED`. The time it takes for a work item to be processed can be determined by multiplying 
+the value of the work item by 10ms. If an error occurs while processing a work item, the process is retried 3 times after 
+which it will be sent to the dead letter queue on RabbitMQ.
 
 ## Getting Started
 ### Prerequisites
@@ -136,11 +140,17 @@ The see the work item report UI visit `http://localhost:8080/work-item-report`
 * `200` 
   - This is returned when the request is successful
 * `400`
-  - This is returned when user makes an invalid request like attempting to create a work item with an invalid value (value that is not an     integer between 1 - 10)
+  - This is returned when user makes an invalid request like attempting to create a work item with an invalid value 
+    (value that is not an integer between 1 - 10)
 * `404`
-  - This is returned when a the work item in question does not exist on the database
+  - This is returned when the work item in question does not exist on the database
 * `500`
-  - This is returned when you attempt to delete an item that has been processed
+  - This is returned when you attempt to delete an item that has already been processed
+
+## Load Testing
+In order to load test this application to ascertain the power of its asynchronous processing. We'll be using an open 
+source tool called JMeter. To download JMeter, download and extract the JMeter binaries zip file [here](https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.5.zip).
+To use this tool in the GUI mode,
 
 ## Author
 
